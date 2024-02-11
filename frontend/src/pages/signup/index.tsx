@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useContext } from 'react';
 import Head from 'next/head';
 import logoImg from '../../../public/logo.svg';
 import Image from 'next/image';
@@ -6,8 +6,12 @@ import styles from '../../../styles/home.module.scss';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import Link from 'next/link';
+import { AuthContext } from '../../contexts/AuthContext';
+import { toast } from 'react-toastify';
 
 export default function Signup() {
+
+  const { signUp } = useContext(AuthContext);
 
   const [ name, setName ] = useState('');
 
@@ -21,12 +25,21 @@ export default function Signup() {
     event.preventDefault();
 
     if (name === '' || email === '' || password === '') {
-      alert("Preencha todos os campos");
+      toast.warning("Preencha todos os campos");
       return;
     }
 
     setLoading(true);
 
+    let data = {
+      name,
+      email,
+      password
+    }
+
+    await signUp(data);
+
+    setLoading(false);
     
   }
 

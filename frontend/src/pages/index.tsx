@@ -6,7 +6,9 @@ import styles from '../../styles/home.module.scss';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import Link from 'next/link';
+import { canSSRGuest } from '../utils/canSSRGuest';
 import { AuthContext } from '../contexts/AuthContext';
+import { toast } from 'react-toastify';
 
 export default function Home() {
   const { signIn } = useContext(AuthContext);
@@ -19,7 +21,7 @@ export default function Home() {
     event.preventDefault();
 
     if ( email === '' || password === '') {
-      alert("Preencha os dados!");
+      toast.warning("Preencha os campos");
       return;
     }
 
@@ -78,3 +80,10 @@ export default function Home() {
     </>
   )
 }
+
+export const getServerSideProps = canSSRGuest(async (context) => {
+  
+  return {
+    props: {}
+  }
+})
