@@ -1,14 +1,33 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { 
     Text,
     View,
     StyleSheet,
     Image,
     TextInput,
-    TouchableOpacity 
+    TouchableOpacity,
+    ActivityIndicator
 } from 'react-native';
+import { AuthContext } from '../../contexts/AuthContext';
 
 export default function SingIn() {
+
+    const { signIn, loadingAuth } = useContext(AuthContext);
+
+    const [ email, setEmail ] = useState('');
+
+    const [ password, setPassword ] = useState('');
+
+    async function handleLogin() {
+
+        if (email === '' || password === '') {
+            return;
+        }
+
+        await signIn({ email, password});
+    
+    }
+
     return(
         <View style={ styles.container }>
             <Image
@@ -21,6 +40,8 @@ export default function SingIn() {
                     placeholder='Digite teu e-mail'
                     placeholderTextColor='#F0F0F0'
                     style={ styles.input }
+                    value={ email }
+                    onChangeText={ setEmail }
                 />
 
                 <TextInput 
@@ -28,10 +49,18 @@ export default function SingIn() {
                     placeholderTextColor='#F0F0F0'
                     secureTextEntry={ true }
                     style={ styles.input }
+                    value={ password }
+                    onChangeText={ setPassword }
                 />
 
-                <TouchableOpacity style={ styles.button }>
-                    <Text style={ styles.buttonText }>Acessar</Text>
+                <TouchableOpacity style={ styles.button } onPress={ handleLogin }>
+                    { loadingAuth ? (
+                            <ActivityIndicator size={ 25 } color="#FFF" />
+                        ) : (
+                            <Text style={ styles.buttonText }>Acessar</Text>
+                        )
+                    }
+                    
                 </TouchableOpacity>
                  
             </View>
